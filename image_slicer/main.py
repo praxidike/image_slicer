@@ -6,9 +6,9 @@ from math import sqrt, ceil, floor
 
 from PIL import Image
 
-from .helpers import get_basename
+from helpers import get_basename
 
-#Its working!
+
 class Tile(object):
     """Represents a single tile."""
 
@@ -78,11 +78,31 @@ def join(tiles):
     @param ``tiles`` - Tuple of ``Image`` instances.
     @return ``Image`` instance.
     """
+    print(get_combined_size(tiles))
     im = Image.new('RGB', get_combined_size(tiles), None)
     columns, rows = calc_columns_rows(len(tiles))
     for tile in tiles:
         im.paste(tile.image, tile.coords)
     return im
+
+
+def join_in_row(filenames):
+    """Joins multiple images in a row"""
+    list_tiles = []
+    for i,filename in enumerate(filenames):
+        tile = slice(filename, 1, save=False)
+        tile = tile[0]
+        #print(tile)
+        width, height = tile.image.size
+        #tile.position[1] = i+1
+        #tile.coords=(i*width,0)
+
+        new_tile = Tile(tile.image, i, [tile.position[0], i+1], (i*width, 0))
+        print(new_tile.coords)
+        print(new_tile.position)
+        list_tiles.append(new_tile)
+    return join(tuple(list_tiles))
+
 
 def validate_image(image, number_tiles):
     """Basic sanity checks prior to performing a split."""
@@ -93,7 +113,7 @@ def validate_image(image, number_tiles):
     except:
         raise ValueError('number_tiles could not be cast to integer.')
 
-    if number_tiles > TILE_LIMIT or number_tiles < 2:
+    if number_tiles > TILE_LIMIT or number_tiles < 1:
         raise ValueError('Number of tiles must be between 2 and {} (you \
                           asked for {}).'.format(TILE_LIMIT, number_tiles))
 
