@@ -8,7 +8,7 @@ from PIL import Image
 
 from .helpers import get_basename
 
-
+#Its working!
 class Tile(object):
     """Represents a single tile."""
 
