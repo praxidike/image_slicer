@@ -6,7 +6,7 @@ from math import sqrt, ceil, floor
 
 from PIL import Image
 
-from helpers import get_basename
+from .helpers import get_basename
 
 
 class Tile(object):
